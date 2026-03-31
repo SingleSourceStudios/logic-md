@@ -34,14 +34,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Running `npm run lint` executes biome and passes with zero warnings
   4. Pushing a PR to main triggers GitHub Actions that run test + lint + typecheck
   5. Repository has MIT license, README with project description, .gitignore, and main + develop branches
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
-- [ ] 01-04: TBD
-- [ ] 01-05: TBD
+- [ ] 01-01-PLAN.md — Scaffold monorepo with workspaces, TypeScript, Biome, Vitest, and repo docs
+- [ ] 01-02-PLAN.md — GitHub Actions CI pipeline and develop branch strategy
 
 ### Phase 2: Type System & JSON Schema
 **Goal**: The complete LogicSpec type hierarchy and embedded JSON Schema exist as the foundation for all downstream modules
@@ -182,7 +179,7 @@ Note: Phases 5 and 6 depend only on Phase 2 and can theoretically run in paralle
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Project Scaffolding | 0/5 | Not started | - |
+| 1. Project Scaffolding | 0/2 | Planning complete | - |
 | 2. Type System & JSON Schema | 0/3 | Not started | - |
 | 3. Parser | 0/3 | Not started | - |
 | 4. Schema Validator | 0/3 | Not started | - |
