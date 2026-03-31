@@ -1,0 +1,17 @@
+{
+	"name": "@logic-md/cli",
+	"version": "0.0.0",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"dependencies": {
+		"@logic-md/core": "*"
+	}
+}

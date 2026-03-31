@@ -1,0 +1,18 @@
+{
+	"name": "@logic-md/core",
+	"version": "0.0.0",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"dependencies": {
+		"gray-matter": "^4.0.3",
+		"ajv": "^8.0.0"
+	}
+}
