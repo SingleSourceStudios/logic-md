@@ -48,12 +48,11 @@ Plans:
   1. A `LogicSpec` TypeScript interface exists that models the full LOGIC.md v1.0 specification (strategies, steps, gates, contracts)
   2. All sub-types are exported and importable from packages/core
   3. An embedded JSON Schema file validates against the LogicSpec structure
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01-PLAN.md — Complete TypeScript type hierarchy for LogicSpec v1.0
+- [ ] 02-02-PLAN.md — JSON Schema draft-07 and ajv schema loader with validation tests
 
 ### Phase 3: Parser
 **Goal**: Developers can parse any LOGIC.md file and get back a typed LogicSpec object or clear error messages
@@ -180,7 +179,7 @@ Note: Phases 5 and 6 depend only on Phase 2 and can theoretically run in paralle
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Project Scaffolding | 0/2 | Complete    | 2026-03-31 |
-| 2. Type System & JSON Schema | 0/3 | Not started | - |
+| 2. Type System & JSON Schema | 0/2 | Planned | - |
 | 3. Parser | 0/3 | Not started | - |
 | 4. Schema Validator | 0/3 | Not started | - |
 | 5. Expression Engine | 0/5 | Not started | - |
