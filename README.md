@@ -1,5 +1,7 @@
 # logic-md
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 > The declarative reasoning layer for AI agents.
 
 LOGIC.md sits between identity (CLAUDE.md / SOUL.md) and capability (SKILL.md / TOOLS.md). It defines *how* an agent thinks — not who it is or what it can do.
