@@ -1,0 +1,164 @@
+# Requirements: logic-md
+
+**Defined:** 2026-03-31
+**Core Value:** Developers can define agent reasoning strategies in a portable, declarative file format — parsed and validated by a standalone library.
+
+## v1 Requirements
+
+Requirements for initial release. Each maps to roadmap phases.
+
+### Scaffolding
+
+- [ ] **SCAF-01**: Monorepo with npm workspaces containing packages/core and packages/cli
+- [ ] **SCAF-02**: TypeScript strict mode with ESM output targeting Node 18+
+- [ ] **SCAF-03**: Path aliases between packages (core importable from cli)
+- [ ] **SCAF-04**: biome configured for lint and format across all packages
+- [ ] **SCAF-05**: vitest configured with empty passing tests in each package
+- [ ] **SCAF-06**: GitHub Actions CI: test + lint + typecheck on PR to main/develop
+- [ ] **SCAF-07**: README.md with project description, quick start placeholder, license badge
+- [ ] **SCAF-08**: LICENSE (MIT) and CONTRIBUTING.md skeleton
+- [ ] **SCAF-09**: .gitignore covering node_modules, dist, .env, coverage
+- [ ] **SCAF-10**: Branch strategy: main (stable) + develop (active)
+
+### Parser
+
+- [ ] **PARS-01**: Extract YAML frontmatter from .md files using gray-matter
+- [ ] **PARS-02**: Return fully typed LogicSpec TypeScript object from parsed YAML
+- [ ] **PARS-03**: Validate parsed YAML against embedded JSON Schema using ajv
+- [ ] **PARS-04**: Report validation errors with line numbers and clear messages
+- [ ] **PARS-05**: Support multiple errors per file (don't bail on first error)
+- [ ] **PARS-06**: Handle edge cases: empty frontmatter, missing delimiters, invalid YAML
+
+### Expression Engine
+
+- [ ] **EXPR-01**: Parse and evaluate `{{ }}` template expressions
+- [ ] **EXPR-02**: Support dot notation for nested property access (e.g., `output.findings.length`)
+- [ ] **EXPR-03**: Support comparison operators (==, !=, <, >, <=, >=)
+- [ ] **EXPR-04**: Support logical operators (&&, ||, !)
+- [ ] **EXPR-05**: Support array methods (.length, .every(), .some(), .contains())
+- [ ] **EXPR-06**: Support ternary expressions (condition ? a : b)
+- [ ] **EXPR-07**: Inject context variables (steps, input, output) into expression scope
+- [ ] **EXPR-08**: Custom parser only — no eval(), no Function constructor
+
+### DAG Resolver
+
+- [ ] **DAG-01**: Topologically sort steps based on `needs` dependencies
+- [ ] **DAG-02**: Detect and report cycles with clear error messages
+- [ ] **DAG-03**: Identify unreachable steps (no path from any root)
+- [ ] **DAG-04**: Resolve parallel execution groups (independent steps at same depth)
+
+### Import Resolver
+
+- [ ] **IMPT-01**: Resolve `imports` array with `ref` and `as` namespace
+- [ ] **IMPT-02**: Load and parse referenced LOGIC.md files from relative paths
+- [ ] **IMPT-03**: Merge imported configs with correct precedence (local overrides imported)
+- [ ] **IMPT-04**: Detect and report circular imports
+
+### CLI
+
+- [ ] **CLI-01**: `logic-md validate <file>` — validate a LOGIC.md file and report errors
+- [ ] **CLI-02**: `logic-md lint <file>` — check best practices (unused steps, unreachable branches, missing fallbacks)
+- [ ] **CLI-03**: `logic-md compile <file>` — output compiled reasoning scaffold for a given step
+- [ ] **CLI-04**: Exit codes: 0 = success, 1 = validation errors, 2 = file not found
+- [ ] **CLI-05**: Colorized terminal output with error/warning/info levels
+
+### Testing
+
+- [ ] **TEST-01**: 90%+ test coverage on parser module
+- [ ] **TEST-02**: 90%+ test coverage on validator module
+- [ ] **TEST-03**: 90%+ test coverage on expression engine
+- [ ] **TEST-04**: 90%+ test coverage on DAG resolver
+- [ ] **TEST-05**: Integration tests: parse → validate → resolve full LOGIC.md files
+
+## v2 Requirements
+
+Deferred to future milestones. Tracked but not in current roadmap.
+
+### Reasoning Compiler (M2)
+
+- **COMP-01**: Compile LOGIC.md into injectable prompt segments (reasoning middleware)
+- **COMP-02**: Output schema compilation for structured output modes (OpenAI/Anthropic/Gemini)
+- **COMP-03**: Quality gate compilation to executable validation functions
+- **COMP-04**: Confidence tracking with threshold-triggered actions
+
+### Visual Builder Integration (M3)
+
+- **VIS-01**: LogicMiddleware class wrapping LLM calls with reasoning scaffold injection
+- **VIS-02**: Visual editor components (strategy selector, DAG editor, contract editor)
+- **VIS-03**: Plugin SDK update with `logic` field in manifest
+
+### Template Marketplace (M4)
+
+- **TMPL-01**: Web app for browsing/searching reasoning pattern templates
+- **TMPL-02**: `logic-md init <template>` CLI command
+- **TMPL-03**: 20+ seed templates for common agent archetypes
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| npm publishing | Deferred until package is stable |
+| Framework integrations (LangGraph, CrewAI) | Post-M1 — need stable core first |
+| Modular9 wiring | M3 milestone, separate project |
+| Template marketplace | M4 milestone |
+| Launch campaign | M5 milestone |
+| Runtime execution engine | LOGIC.md is a spec/parser, not a runtime |
+| LLM API calls | Parser is model-agnostic, no API dependencies |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| SCAF-01 | — | Pending |
+| SCAF-02 | — | Pending |
+| SCAF-03 | — | Pending |
+| SCAF-04 | — | Pending |
+| SCAF-05 | — | Pending |
+| SCAF-06 | — | Pending |
+| SCAF-07 | — | Pending |
+| SCAF-08 | — | Pending |
+| SCAF-09 | — | Pending |
+| SCAF-10 | — | Pending |
+| PARS-01 | — | Pending |
+| PARS-02 | — | Pending |
+| PARS-03 | — | Pending |
+| PARS-04 | — | Pending |
+| PARS-05 | — | Pending |
+| PARS-06 | — | Pending |
+| EXPR-01 | — | Pending |
+| EXPR-02 | — | Pending |
+| EXPR-03 | — | Pending |
+| EXPR-04 | — | Pending |
+| EXPR-05 | — | Pending |
+| EXPR-06 | — | Pending |
+| EXPR-07 | — | Pending |
+| EXPR-08 | — | Pending |
+| DAG-01 | — | Pending |
+| DAG-02 | — | Pending |
+| DAG-03 | — | Pending |
+| DAG-04 | — | Pending |
+| IMPT-01 | — | Pending |
+| IMPT-02 | — | Pending |
+| IMPT-03 | — | Pending |
+| IMPT-04 | — | Pending |
+| CLI-01 | — | Pending |
+| CLI-02 | — | Pending |
+| CLI-03 | — | Pending |
+| CLI-04 | — | Pending |
+| CLI-05 | — | Pending |
+| TEST-01 | — | Pending |
+| TEST-02 | — | Pending |
+| TEST-03 | — | Pending |
+| TEST-04 | — | Pending |
+| TEST-05 | — | Pending |
+
+**Coverage:**
+- v1 requirements: 42 total
+- Mapped to phases: 0
+- Unmapped: 42
+
+---
+*Requirements defined: 2026-03-31*
+*Last updated: 2026-03-31 after initial definition*
