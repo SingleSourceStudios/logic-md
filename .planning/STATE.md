@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 
 ## Current Position
 
-Phase: 5 of 9 (Expression Engine)
-Plan: 3 of 3 in current phase
-Status: In progress
-Last activity: 2026-03-31 -- Completed 05-02 expression evaluator
+Phase: 5 of 9 (Expression Engine) -- COMPLETE
+Plan: 3 of 3 in current phase -- ALL DONE
+Status: Phase 5 complete, ready for Phase 6
+Last activity: 2026-03-31 -- Completed 05-03 barrel exports and integration tests
 
-Progress: [██████░░░░] 60%
+Progress: [██████░░░░] 65%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 6min
-- Total execution time: 0.68 hours
+- Total plans completed: 8
+- Average duration: 5min
+- Total execution time: 0.7 hours
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [██████░░░░] 60%
 | 02 | 2 | 23min | 11.5min |
 | 03 | 1 | 6min | 6min |
 | 04 | 2 | 6min | 3min |
-| 05 | 2 | 5min | 2.5min |
+| 05 | 3 | 7min | 2.3min |
 
 **Recent Trend:**
-- Last 5 plans: 6min, 3min, 3min, 3min, 2min
+- Last 5 plans: 3min, 3min, 3min, 2min, 2min
 - Trend: improving
 
 | Phase 02 P01 | 10min | 2 tasks | 4 files |
@@ -43,6 +43,7 @@ Progress: [██████░░░░] 60%
 | Phase 04 P02 | 3min | 2 tasks | 2 files |
 | Phase 05 P01 | 3min | 2 tasks | 2 files |
 | Phase 05 P02 | 2min | 2 tasks | 2 files |
+| Phase 05 P03 | 2min | 1 task | 2 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,7 @@ Recent decisions affecting current work:
 - [Phase 05]: Pratt parser with 8 precedence levels; CallExpression models method calls (callee.property(args))
 - [Phase 05]: Regular enum for TokenType (not const enum) to preserve runtime string values
 - [Phase 05]: Loose equality (==) for expression comparisons; safe navigation returns undefined for missing intermediates
+- [Phase 05]: Strip comments before security regex check to avoid false positives on eval() mentions in documentation
 
 ### Pending Todos
 
@@ -75,5 +77,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 05-02-PLAN.md
+Stopped at: Completed 05-03-PLAN.md (Phase 5 complete)
 Resume file: None
