@@ -39,8 +39,8 @@
 
 ### Types
 
-- [ ] **TYPE-01**: New types added to types.ts: ExecutionContext, CompiledStep, CompiledWorkflow, QualityGate, RetryPolicy, WorkflowContext
-- [ ] **TYPE-02**: All new types exported from packages/core/index.ts barrel
+- [x] **TYPE-01**: New types added to types.ts: ExecutionContext, CompiledStep, CompiledWorkflow, QualityGate, RetryPolicy, WorkflowContext
+- [x] **TYPE-02**: All new types exported from packages/core/index.ts barrel
 
 ### CLI Update
 
@@ -55,9 +55,9 @@
 
 ### Constraints
 
-- [ ] **CNST-01**: All compiler functions are pure -- no side effects, no I/O, no LLM calls
-- [ ] **CNST-02**: Output is model-agnostic -- works with any LLM that accepts text prompts
-- [ ] **CNST-03**: No new dependencies -- builds entirely on M1 foundation
+- [x] **CNST-01**: All compiler functions are pure -- no side effects, no I/O, no LLM calls
+- [x] **CNST-02**: Output is model-agnostic -- works with any LLM that accepts text prompts
+- [x] **CNST-03**: No new dependencies -- builds entirely on M1 foundation
 
 ## v1.0 Requirements (Complete)
 
@@ -97,16 +97,16 @@ All v1.0 requirements shipped and validated. See MILESTONES.md for details.
 | GATE-03 | Phase 13 | Pending |
 | TOKN-01 | Phase 14 | Pending |
 | TOKN-02 | Phase 14 | Pending |
-| TYPE-01 | Phase 10 | Pending |
-| TYPE-02 | Phase 10 | Pending |
+| TYPE-01 | Phase 10 | Complete |
+| TYPE-02 | Phase 10 | Complete |
 | CLIU-01 | Phase 16 | Pending |
 | CLIU-02 | Phase 16 | Pending |
 | CTST-01 | Phase 17 | Pending |
 | CTST-02 | Phase 17 | Pending |
 | CTST-03 | Phase 17 | Pending |
-| CNST-01 | Phase 10 | Pending |
-| CNST-02 | Phase 10 | Pending |
-| CNST-03 | Phase 10 | Pending |
+| CNST-01 | Phase 10 | Complete |
+| CNST-02 | Phase 10 | Complete |
+| CNST-03 | Phase 10 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 29 total

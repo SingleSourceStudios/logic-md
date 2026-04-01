@@ -126,7 +126,7 @@ Plans:
 
 **Milestone Goal:** Build the reasoning compiler that transforms a parsed LOGIC.md into injectable prompt segments -- the runtime middleware layer between system prompt and user message.
 
-- [ ] **Phase 10: Compiler Types & Foundation** - New types, barrel exports, and pure-function architecture constraints
+- [x] **Phase 10: Compiler Types & Foundation** - New types, barrel exports, and pure-function architecture constraints (completed 2026-04-01)
 - [ ] **Phase 11: Step Compiler Core** - Compile a single step into a prompt segment with reasoning strategy, instructions, and output format
 - [ ] **Phase 12: Step Compiler Context** - Branch context, retry context, confidence thresholds, and quality gate descriptions in prompt segments
 - [ ] **Phase 13: Quality Gate Compilation** - Quality gates compile to executable validators using the expression engine
@@ -238,7 +238,7 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 7. Import Resolver | v1.0 | 2/2 | Complete | 2026-04-01 |
 | 8. CLI | v1.0 | 2/2 | Complete | 2026-04-01 |
 | 9. Test Coverage & Integration | v1.0 | 3/3 | Complete | 2026-04-01 |
-| 10. Compiler Types & Foundation | v1.1 | 0/1 | In progress | - |
+| 10. Compiler Types & Foundation | 1/1 | Complete   | 2026-04-01 | - |
 | 11. Step Compiler Core | v1.1 | 0/0 | Not started | - |
 | 12. Step Compiler Context | v1.1 | 0/0 | Not started | - |
 | 13. Quality Gate Compilation | v1.1 | 0/0 | Not started | - |
