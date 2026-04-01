@@ -346,9 +346,7 @@ describe("evaluate", () => {
 		});
 
 		it("resolves deeply nested property", () => {
-			expect(
-				evaluate("{{ a.b.c }}", { a: { b: { c: "deep" } } }),
-			).toBe("deep");
+			expect(evaluate("{{ a.b.c }}", { a: { b: { c: "deep" } } })).toBe("deep");
 		});
 
 		it("returns undefined for missing intermediate property (safe navigation)", () => {
@@ -453,9 +451,7 @@ describe("evaluate", () => {
 		});
 
 		it("evaluates ternary with context variable comparison", () => {
-			expect(
-				evaluate('{{ x > 5 ? "high" : "low" }}', { x: 10 }),
-			).toBe("high");
+			expect(evaluate('{{ x > 5 ? "high" : "low" }}', { x: 10 })).toBe("high");
 		});
 	});
 
@@ -468,42 +464,30 @@ describe("evaluate", () => {
 		});
 
 		it(".contains() returns true when array includes value", () => {
-			expect(
-				evaluate('{{ items.contains("a") }}', { items: ["a", "b"] }),
-			).toBe(true);
+			expect(evaluate('{{ items.contains("a") }}', { items: ["a", "b"] })).toBe(true);
 		});
 
 		it(".contains() returns false when array does not include value", () => {
-			expect(
-				evaluate('{{ items.contains("z") }}', { items: ["a", "b"] }),
-			).toBe(false);
+			expect(evaluate('{{ items.contains("z") }}', { items: ["a", "b"] })).toBe(false);
 		});
 
 		it(".every() no args returns true when all elements truthy", () => {
-			expect(
-				evaluate("{{ items.every() }}", { items: [1, true, "x"] }),
-			).toBe(true);
+			expect(evaluate("{{ items.every() }}", { items: [1, true, "x"] })).toBe(true);
 		});
 
 		it(".every() no args returns false when any element falsy", () => {
-			expect(
-				evaluate("{{ items.every() }}", { items: [1, 0, "x"] }),
-			).toBe(false);
+			expect(evaluate("{{ items.every() }}", { items: [1, 0, "x"] })).toBe(false);
 		});
 
 		it(".some() no args returns true when any element truthy", () => {
-			expect(
-				evaluate("{{ items.some() }}", { items: [0, false, 1] }),
-			).toBe(true);
+			expect(evaluate("{{ items.some() }}", { items: [0, false, 1] })).toBe(true);
 		});
 
 		it(".some() no args returns false when all elements falsy", () => {
-			expect(
-				evaluate("{{ items.some() }}", { items: [0, false, null] }),
-			).toBe(false);
+			expect(evaluate("{{ items.some() }}", { items: [0, false, null] })).toBe(false);
 		});
 
-		it('.every(prop) checks named property on each element - all true', () => {
+		it(".every(prop) checks named property on each element - all true", () => {
 			expect(
 				evaluate('{{ items.every("valid") }}', {
 					items: [{ valid: true }, { valid: true }],
@@ -511,7 +495,7 @@ describe("evaluate", () => {
 			).toBe(true);
 		});
 
-		it('.every(prop) checks named property on each element - one false', () => {
+		it(".every(prop) checks named property on each element - one false", () => {
 			expect(
 				evaluate('{{ items.every("valid") }}', {
 					items: [{ valid: true }, { valid: false }],
@@ -519,7 +503,7 @@ describe("evaluate", () => {
 			).toBe(false);
 		});
 
-		it('.some(prop) checks named property on each element', () => {
+		it(".some(prop) checks named property on each element", () => {
 			expect(
 				evaluate('{{ items.some("active") }}', {
 					items: [{ active: false }, { active: true }],
@@ -528,9 +512,9 @@ describe("evaluate", () => {
 		});
 
 		it("throws ExpressionError when calling method on non-array", () => {
-			expect(() =>
-				evaluate('{{ items.contains("a") }}', { items: "not-an-array" }),
-			).toThrow(ExpressionError);
+			expect(() => evaluate('{{ items.contains("a") }}', { items: "not-an-array" })).toThrow(
+				ExpressionError,
+			);
 		});
 	});
 

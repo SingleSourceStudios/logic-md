@@ -476,3 +476,136 @@ export function parse(tokens: Token[]): ASTNode {
 
 	return result;
 }
+
+// -----------------------------------------------------------------------------
+// Expression Context
+// -----------------------------------------------------------------------------
+
+export type ExpressionContext = Record<string, unknown>;
+
+// -----------------------------------------------------------------------------
+// Delimiter Extraction
+// -----------------------------------------------------------------------------
+
+function extractExpression(template: string): string {
+	const trimmed = template.trim();
+	if (!trimmed.startsWith("{{") || !trimmed.endsWith("}}")) {
+		throw new ExpressionError("Expression must be wrapped in {{ }} delimiters");
+	}
+	return trimmed.slice(2, -2).trim();
+}
+
+// -----------------------------------------------------------------------------
+// Tree-Walk Evaluator
+// -----------------------------------------------------------------------------
+
+function evaluateNode(node: ASTNode, context: ExpressionContext): unknown {
+	switch (node.type) {
+		case "Literal":
+			return node.value;
+
+		case "Identifier":
+			return context[node.name];
+
+		case "MemberExpression": {
+			const obj = evaluateNode(node.object, context);
+			if (obj === null || obj === undefined) {
+				return undefined;
+			}
+			return (obj as Record<string, unknown>)[node.property];
+		}
+
+		case "BinaryExpression": {
+			// Short-circuit for logical operators
+			if (node.operator === "&&") {
+				const leftVal = evaluateNode(node.left, context);
+				if (!leftVal) return leftVal;
+				return evaluateNode(node.right, context);
+			}
+			if (node.operator === "||") {
+				const leftVal = evaluateNode(node.left, context);
+				if (leftVal) return leftVal;
+				return evaluateNode(node.right, context);
+			}
+
+			const left = evaluateNode(node.left, context);
+			const right = evaluateNode(node.right, context);
+
+			switch (node.operator) {
+				// biome-ignore lint/suspicious/noDoubleEquals: Expression engine uses loose equality by design
+				case "==":
+					return left == right;
+				// biome-ignore lint/suspicious/noDoubleEquals: Expression engine uses loose inequality by design
+				case "!=":
+					return left != right;
+				case "<":
+					return (left as number) < (right as number);
+				case ">":
+					return (left as number) > (right as number);
+				case "<=":
+					return (left as number) <= (right as number);
+				case ">=":
+					return (left as number) >= (right as number);
+				default:
+					throw new ExpressionError(`Unknown operator: ${node.operator}`);
+			}
+		}
+
+		case "UnaryExpression": {
+			const operand = evaluateNode(node.operand, context);
+			if (node.operator === "!") {
+				return !operand;
+			}
+			throw new ExpressionError(`Unknown unary operator: ${node.operator}`);
+		}
+
+		case "ConditionalExpression": {
+			const test = evaluateNode(node.test, context);
+			return test ? evaluateNode(node.consequent, context) : evaluateNode(node.alternate, context);
+		}
+
+		case "CallExpression": {
+			const target = evaluateNode(node.callee, context);
+			if (!Array.isArray(target)) {
+				throw new ExpressionError(`Cannot call .${node.property}() on non-array value`);
+			}
+
+			const evaluatedArgs = node.args.map((arg) => evaluateNode(arg, context));
+
+			switch (node.property) {
+				case "contains":
+					return target.includes(evaluatedArgs[0]);
+
+				case "every": {
+					if (evaluatedArgs.length === 0) {
+						return target.every(Boolean);
+					}
+					const propName = evaluatedArgs[0] as string;
+					return target.every((item) => (item as Record<string, unknown>)[propName]);
+				}
+
+				case "some": {
+					if (evaluatedArgs.length === 0) {
+						return target.some(Boolean);
+					}
+					const propName = evaluatedArgs[0] as string;
+					return target.some((item) => (item as Record<string, unknown>)[propName]);
+				}
+
+				default:
+					throw new ExpressionError(`Unknown method: .${node.property}()`);
+			}
+		}
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Public API
+// -----------------------------------------------------------------------------
+
+export function evaluate(template: string, context: ExpressionContext): unknown {
+	const expr = extractExpression(template);
+	const tokens = tokenize(expr);
+	const ast = parse(tokens);
+	return evaluateNode(ast, context);
+}
