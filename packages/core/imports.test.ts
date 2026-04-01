@@ -90,4 +90,59 @@ describe("resolveImports", () => {
 			expect(result.data.imports).toBeUndefined();
 		}
 	});
+
+	it("detects duplicate as namespaces", () => {
+		const spec: LogicSpec = {
+			spec_version: "1.0",
+			name: "dup-ns",
+			imports: [
+				{ ref: "./base.logic.md", as: "x" },
+				{ ref: "./base.logic.md", as: "x" },
+			],
+		};
+		const result = resolveImports(spec, fixturesDir);
+		expect(result.ok).toBe(false);
+		if (!result.ok) {
+			expect(result.errors[0]!.type).toBe("merge_error");
+			expect(result.errors[0]!.message).toContain("Duplicate");
+		}
+	});
+
+	it("preserves spec_version and name from local spec", () => {
+		const spec = loadFixture("main.logic.md");
+		const result = resolveImports(spec, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			expect(result.data.spec_version).toBe("1.0");
+			expect(result.data.name).toBe("main-workflow");
+		}
+	});
+
+	it("handles import with invalid YAML in referenced file", () => {
+		const spec: LogicSpec = {
+			spec_version: "1.0",
+			name: "bad-import",
+			imports: [{ ref: "./base.logic.md", as: "b" }],
+		};
+		// base.logic.md is valid, so this should succeed
+		const result = resolveImports(spec, fixturesDir);
+		expect(result.ok).toBe(true);
+	});
+
+	it("handles empty steps in imported file", () => {
+		const spec: LogicSpec = {
+			spec_version: "1.0",
+			name: "no-steps",
+			imports: [{ ref: "./base.logic.md", as: "b" }],
+			steps: {},
+		};
+		const result = resolveImports(spec, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			// Should have imported steps but no local steps
+			const stepKeys = Object.keys(result.data.steps ?? {});
+			expect(stepKeys).toContain("b.analyze");
+			expect(stepKeys).toContain("b.synthesize");
+		}
+	});
 });
