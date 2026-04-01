@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Developers can define agent reasoning strategies in a portable, declarative file format -- parsed and validated by a standalone library.
-**Current focus:** Phase 8: CLI
+**Current focus:** Phase 8: CLI (complete)
 
 ## Current Position
 
-Phase: 8 of 9 (CLI)
-Plan: 2 of 2 in current phase
-Status: Plan 08-01 complete, ready for 08-02
-Last activity: 2026-03-31 -- Completed 08-01 CLI commands
+Phase: 8 of 9 (CLI) -- COMPLETE
+Plan: 2 of 2 in current phase (all complete)
+Status: Phase 08 complete, ready for Phase 09
+Last activity: 2026-03-31 -- Completed 08-02 CLI integration tests
 
-Progress: [████████░░] 82%
+Progress: [█████████░] 91%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
-- Average duration: 5min
-- Total execution time: 0.75 hours
+- Total plans completed: 11
+- Average duration: 4.5min
+- Total execution time: 0.8 hours
 
 **By Phase:**
 
@@ -32,10 +32,10 @@ Progress: [████████░░] 82%
 | 04 | 2 | 6min | 3min |
 | 05 | 3 | 7min | 2.3min |
 | 06 | 1 | 2min | 2min |
-| 08 | 1 | 3min | 3min |
+| 08 | 2 | 5min | 2.5min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 2min, 2min, 2min, 3min
+- Last 5 plans: 2min, 2min, 2min, 3min, 2min
 - Trend: improving
 
 | Phase 02 P01 | 10min | 2 tasks | 4 files |
@@ -48,6 +48,7 @@ Progress: [████████░░] 82%
 | Phase 05 P03 | 2min | 1 task | 2 files |
 | Phase 06 P01 | 2min | 2 tasks | 3 files |
 | Phase 08 P01 | 3min | 2 tasks | 6 files |
+| Phase 08 P02 | 2min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - [Phase 08]: Raw ANSI codes for terminal colors (zero deps, universal compatibility)
 - [Phase 08]: Pure lintSpec() function separated from I/O for testability
 - [Phase 08]: Command handlers return exit codes; caller does process.exit()
+- [Phase 08]: execFileSync with try/catch for subprocess exit code capture in integration tests
+- [Phase 08]: Separate fixture files for validation errors vs lint warnings
 
 ### Pending Todos
 
@@ -87,5 +90,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 08-01-PLAN.md
+Stopped at: Completed 08-02-PLAN.md (Phase 08 complete)
 Resume file: None
