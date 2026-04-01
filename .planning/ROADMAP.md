@@ -91,14 +91,12 @@ Plans:
   3. Array methods (.length, .every(), .some(), .contains()) evaluate correctly
   4. Context variables (steps, input, output) are injectable and accessible in expressions
   5. No eval() or Function constructor is used anywhere in the implementation
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
-- [ ] 05-04: TBD
-- [ ] 05-05: TBD
+- [ ] 05-01-PLAN.md — TDD lexer and Pratt parser: tokenization and AST construction
+- [ ] 05-02-PLAN.md — TDD tree-walk evaluator: operator dispatch, array methods, context injection
+- [ ] 05-03-PLAN.md — Barrel export wiring and integration tests with realistic expressions
 
 ### Phase 6: DAG Resolver
 **Goal**: Step dependency graphs in LOGIC.md files are resolved into correct execution order with full error reporting
@@ -179,7 +177,7 @@ Note: Phases 5 and 6 depend only on Phase 2 and can theoretically run in paralle
 | 2. Type System & JSON Schema | 0/2 | Complete    | 2026-04-01 |
 | 3. Parser | 0/1 | Complete    | 2026-04-01 |
 | 4. Schema Validator | 0/2 | Complete    | 2026-04-01 |
-| 5. Expression Engine | 0/5 | Not started | - |
+| 5. Expression Engine | 0/3 | Not started | - |
 | 6. DAG Resolver | 0/3 | Not started | - |
 | 7. Import Resolver | 0/3 | Not started | - |
 | 8. CLI | 0/5 | Not started | - |
