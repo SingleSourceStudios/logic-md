@@ -14,7 +14,7 @@ const BOLD = "\x1b[1m";
 const DIM = "\x1b[2m";
 
 /** Whether color output is suppressed (NO_COLOR spec or dumb terminal). */
-const noColor: boolean = "NO_COLOR" in process.env || process.env["TERM"] === "dumb";
+const noColor: boolean = "NO_COLOR" in process.env || process.env.TERM === "dumb";
 
 function colorize(code: string, text: string): string {
 	if (noColor) return text;

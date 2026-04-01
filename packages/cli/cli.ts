@@ -39,16 +39,16 @@ const { values, positionals } = parseArgs({
 	strict: false,
 });
 
-if (values["version"]) {
+if (values.version) {
 	console.log(VERSION);
 	process.exit(0);
 }
 
 const command = positionals[0];
 const filePath = positionals[1];
-const options = { json: values["json"] === true };
+const options = { json: values.json === true };
 
-if (values["help"] && !command) {
+if (values.help && !command) {
 	printUsage();
 	process.exit(0);
 }
