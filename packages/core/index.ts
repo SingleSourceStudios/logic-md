@@ -8,3 +8,4 @@ export {
 } from "./parser.js";
 export { createValidator, getSchema } from "./schema.js";
 export * from "./types.js";
+export { validate } from "./validator.js";
