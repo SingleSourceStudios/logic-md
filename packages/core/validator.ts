@@ -130,8 +130,10 @@ export function validate(fileContent: string): ValidationResult {
 		return { ok: true, data: result.data as LogicSpec };
 	}
 
-	// Build source position map from raw YAML
-	const yamlSource = result.matter;
+	// Build source position map from raw YAML.
+	// gray-matter's `.matter` starts with a leading newline — strip it
+	// so that YAML line numbers align correctly with FRONTMATTER_OFFSET.
+	const yamlSource = result.matter.replace(/^\n/, "");
 	const lineCounter = new LineCounter();
 	const doc = parseDocument(yamlSource, { lineCounter });
 
