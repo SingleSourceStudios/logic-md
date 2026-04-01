@@ -56,11 +56,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### CLI
 
-- [ ] **CLI-01**: `logic-md validate <file>` — validate a LOGIC.md file and report errors
-- [ ] **CLI-02**: `logic-md lint <file>` — check best practices (unused steps, unreachable branches, missing fallbacks)
-- [ ] **CLI-03**: `logic-md compile <file>` — output compiled reasoning scaffold for a given step
-- [ ] **CLI-04**: Exit codes: 0 = success, 1 = validation errors, 2 = file not found
-- [ ] **CLI-05**: Colorized terminal output with error/warning/info levels
+- [x] **CLI-01**: `logic-md validate <file>` — validate a LOGIC.md file and report errors
+- [x] **CLI-02**: `logic-md lint <file>` — check best practices (unused steps, unreachable branches, missing fallbacks)
+- [x] **CLI-03**: `logic-md compile <file>` — output compiled reasoning scaffold for a given step
+- [x] **CLI-04**: Exit codes: 0 = success, 1 = validation errors, 2 = file not found
+- [x] **CLI-05**: Colorized terminal output with error/warning/info levels
 
 ### Testing
 
@@ -143,11 +143,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMPT-02 | Phase 7 | Pending |
 | IMPT-03 | Phase 7 | Pending |
 | IMPT-04 | Phase 7 | Pending |
-| CLI-01 | Phase 8 | Pending |
-| CLI-02 | Phase 8 | Pending |
-| CLI-03 | Phase 8 | Pending |
-| CLI-04 | Phase 8 | Pending |
-| CLI-05 | Phase 8 | Pending |
+| CLI-01 | Phase 8 | Complete |
+| CLI-02 | Phase 8 | Complete |
+| CLI-03 | Phase 8 | Complete |
+| CLI-04 | Phase 8 | Complete |
+| CLI-05 | Phase 8 | Complete |
 | TEST-01 | Phase 9 | Pending |
 | TEST-02 | Phase 9 | Pending |
 | TEST-03 | Phase 9 | Pending |

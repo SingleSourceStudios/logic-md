@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Developers can define agent reasoning strategies in a portable, declarative file format -- parsed and validated by a standalone library.
-**Current focus:** Phase 6: DAG Resolver
+**Current focus:** Phase 8: CLI
 
 ## Current Position
 
-Phase: 6 of 9 (DAG Resolver) -- COMPLETE
-Plan: 1 of 1 in current phase -- ALL DONE
-Status: Phase 6 complete, ready for Phase 7
-Last activity: 2026-03-31 -- Completed 06-01 DAG resolver
+Phase: 8 of 9 (CLI)
+Plan: 2 of 2 in current phase
+Status: Plan 08-01 complete, ready for 08-02
+Last activity: 2026-03-31 -- Completed 08-01 CLI commands
 
-Progress: [███████░░░] 72%
+Progress: [████████░░] 82%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: 5min
-- Total execution time: 0.7 hours
+- Total execution time: 0.75 hours
 
 **By Phase:**
 
@@ -32,9 +32,10 @@ Progress: [███████░░░] 72%
 | 04 | 2 | 6min | 3min |
 | 05 | 3 | 7min | 2.3min |
 | 06 | 1 | 2min | 2min |
+| 08 | 1 | 3min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 3min, 2min, 2min, 2min
+- Last 5 plans: 3min, 2min, 2min, 2min, 3min
 - Trend: improving
 
 | Phase 02 P01 | 10min | 2 tasks | 4 files |
@@ -46,6 +47,7 @@ Progress: [███████░░░] 72%
 | Phase 05 P02 | 2min | 2 tasks | 2 files |
 | Phase 05 P03 | 2min | 1 task | 2 files |
 | Phase 06 P01 | 2min | 2 tasks | 3 files |
+| Phase 08 P01 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -70,6 +72,9 @@ Recent decisions affecting current work:
 - [Phase 06]: Kahn's algorithm with depth tracking for topological sort + parallel level grouping
 - [Phase 06]: DFS gray/black coloring for cycle path extraction on remainder subgraph
 - [Phase 06]: Early return on validation errors (self-ref, missing dep) before topological sort
+- [Phase 08]: Raw ANSI codes for terminal colors (zero deps, universal compatibility)
+- [Phase 08]: Pure lintSpec() function separated from I/O for testability
+- [Phase 08]: Command handlers return exit codes; caller does process.exit()
 
 ### Pending Todos
 
@@ -82,5 +87,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 06-01-PLAN.md (Phase 6 complete)
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None
