@@ -34,8 +34,8 @@
 
 ### Token Estimation
 
-- [ ] **TOKN-01**: `estimateTokens(text)` returns approximate token count (~4 chars per token)
-- [ ] **TOKN-02**: Compiled prompt segments warn if exceeding 2000 tokens
+- [x] **TOKN-01**: `estimateTokens(text)` returns approximate token count (~4 chars per token)
+- [x] **TOKN-02**: Compiled prompt segments warn if exceeding 2000 tokens
 
 ### Types
 
@@ -95,8 +95,8 @@ All v1.0 requirements shipped and validated. See MILESTONES.md for details.
 | GATE-01 | Phase 13 | Complete |
 | GATE-02 | Phase 13 | Complete |
 | GATE-03 | Phase 13 | Complete |
-| TOKN-01 | Phase 14 | Pending |
-| TOKN-02 | Phase 14 | Pending |
+| TOKN-01 | Phase 14 | Complete |
+| TOKN-02 | Phase 14 | Complete |
 | TYPE-01 | Phase 10 | Complete |
 | TYPE-02 | Phase 10 | Complete |
 | CLIU-01 | Phase 16 | Complete |
