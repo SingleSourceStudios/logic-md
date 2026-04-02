@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 
 ## Current Position
 
-Phase: 11 of 17 (Step Compiler Core)
-Plan: 01 of 02 -- COMPLETE
-Status: In progress
-Last activity: 2026-04-02 -- Phase 11 Plan 01 executed
+Phase: 11 of 17 (Step Compiler Core) -- COMPLETE
+Plan: 02 of 02 -- COMPLETE
+Status: Phase 11 complete
+Last activity: 2026-04-02 -- Phase 11 Plan 02 executed
 
-Progress: [###########.........] 59% (10/17 phases complete)
+Progress: [############........] 65% (11/17 phases complete)
 
 ## Performance Metrics
 
@@ -36,10 +36,10 @@ Progress: [###########.........] 59% (10/17 phases complete)
 | 09 | 3 | 7min | 2.3min |
 
 | 10 | 1 | 2min | 2min |
-| 11 | 1 | 3min | 3min |
+| 11 | 2 | 7min | 3.5min |
 
 **Recent Trend:**
-- Last 5 plans: 2min, 3min, 2min, 2min, 3min
+- Last 5 plans: 3min, 2min, 2min, 3min, 4min
 - Trend: Stable
 
 ## Accumulated Context
@@ -58,6 +58,8 @@ Recent decisions affecting current work:
 - Strategy preamble and step instructions joined with double newline for prompt readability
 - DAG resolver called inline per compileStep (pure, no caching needed at this stage)
 - Research-synthesizer fixture used as canonical test data for compiler tests
+- maximumInterval defaults to initialInterval when specified, otherwise 60s (Temporal retry semantics)
+- Output format instructions are model-agnostic: mention both JSON mode and structured output mode
 
 ### Pending Todos
 
@@ -70,5 +72,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 11-01-PLAN.md
+Stopped at: Completed 11-02-PLAN.md (Phase 11 complete)
 Resume file: None
