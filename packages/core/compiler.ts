@@ -8,6 +8,7 @@ import { resolve } from "./dag.js";
 import type {
 	CompiledStep,
 	CompiledWorkflow,
+	ConfidenceConfig,
 	ExecutionContext,
 	JsonSchemaObject,
 	LogicSpec,
@@ -119,6 +120,62 @@ function formatRetryContext(
 }
 
 /**
+ * Format confidence requirements section.
+ * Instructs the LLM to meet minimum confidence levels.
+ */
+function formatConfidenceRequirements(confidence: ConfidenceConfig): string {
+	const lines: string[] = ["## Confidence Requirements"];
+
+	if (confidence.minimum !== undefined) {
+		lines.push(
+			`You must achieve a minimum confidence of ${confidence.minimum} in your response.`,
+		);
+	}
+
+	if (confidence.target !== undefined) {
+		lines.push(`Target confidence level: ${confidence.target}`);
+	}
+
+	if (confidence.escalate_below !== undefined) {
+		lines.push(
+			`If your confidence falls below ${confidence.escalate_below}, escalate to a human reviewer rather than proceeding.`,
+		);
+	}
+
+	return lines.join("\n");
+}
+
+/**
+ * Format quality gate checklist section.
+ * Collects items from step.verification and spec.quality_gates.pre_output.
+ */
+function formatQualityGateChecklist(step: Step, spec: LogicSpec): string {
+	const items: string[] = [];
+
+	if (step.verification) {
+		items.push(step.verification.on_fail_message ?? step.verification.check);
+	}
+
+	if (spec.quality_gates?.pre_output) {
+		for (const gate of spec.quality_gates.pre_output) {
+			items.push(gate.message ?? gate.name);
+		}
+	}
+
+	if (items.length === 0) {
+		return "";
+	}
+
+	const lines: string[] = [
+		"## Pre-Response Checklist",
+		"Before responding, verify:",
+		...items.map((item) => `- [ ] ${item}`),
+	];
+
+	return lines.join("\n");
+}
+
+/**
  * Format the output schema section for inclusion in the system prompt.
  * Model-agnostic: works for both JSON mode and function-calling mode.
  */
@@ -207,6 +264,15 @@ export function compileStep(
 		segments.push(
 			formatRetryContext(context.attemptNumber, context.previousFailureReason, step.retry),
 		);
+	}
+
+	if (step.confidence) {
+		segments.push(formatConfidenceRequirements(step.confidence));
+	}
+
+	const qualityGateSection = formatQualityGateChecklist(step, spec);
+	if (qualityGateSection) {
+		segments.push(qualityGateSection);
 	}
 
 	if (step.output_schema) {
