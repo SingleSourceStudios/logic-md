@@ -378,8 +378,59 @@ export function compileStep(
  *
  * Pure function -- no I/O, no side effects.
  */
-export function compileWorkflow(_spec: LogicSpec, _context: WorkflowContext): CompiledWorkflow {
-	throw new CompilerError("Not implemented");
+export function compileWorkflow(spec: LogicSpec, context: WorkflowContext): CompiledWorkflow {
+	// Handle empty steps
+	if (!spec.steps || Object.keys(spec.steps).length === 0) {
+		return {
+			steps: [],
+			dagLevels: [],
+			globalQualityGates: [],
+			fallbackPolicy: spec.fallback ?? null,
+			metadata: { name: spec.name, totalSteps: 0, totalLevels: 0 },
+		};
+	}
+
+	// Resolve DAG
+	const dagResult = resolve(spec.steps);
+	if (!dagResult.ok) {
+		throw new CompilerError(
+			"Workflow DAG resolution failed: " + dagResult.errors.map((e) => e.message).join("; "),
+		);
+	}
+
+	// Pre-compile steps in DAG order
+	const compiledSteps: CompiledStep[] = [];
+	for (const stepName of dagResult.order) {
+		const ctx: ExecutionContext = {
+			currentStep: stepName,
+			previousOutputs: context.previousOutputs,
+			input: context.input,
+			attemptNumber: context.attemptNumber,
+			branchReason: context.branchReason,
+			previousFailureReason: context.previousFailureReason,
+		};
+		compiledSteps.push(compileStep(spec, stepName, ctx));
+	}
+
+	// Compile global quality gates
+	const globalGates: QualityGateValidator[] = [];
+	if (spec.quality_gates?.pre_output) {
+		for (const gate of spec.quality_gates.pre_output) {
+			globalGates.push(compileGateValidator(gate.check, gate.message));
+		}
+	}
+
+	return {
+		steps: compiledSteps,
+		dagLevels: dagResult.levels,
+		globalQualityGates: globalGates,
+		fallbackPolicy: spec.fallback ?? null,
+		metadata: {
+			name: spec.name,
+			totalSteps: Object.keys(spec.steps).length,
+			totalLevels: dagResult.levels.length,
+		},
+	};
 }
 
 /**
