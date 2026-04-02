@@ -13,6 +13,7 @@ const CLI_PATH = resolve(__dirname, "dist/cli.js");
 const VALID_FIXTURE = resolve(__dirname, "fixtures/valid.logic.md");
 const INVALID_FIXTURE = resolve(__dirname, "fixtures/invalid.logic.md");
 const LINT_WARN_FIXTURE = resolve(__dirname, "fixtures/lint-warnings.logic.md");
+const SELF_REFLECTION_FIXTURE = resolve(__dirname, "fixtures/self-reflection.logic.md");
 
 interface RunResult {
 	stdout: string;
@@ -124,6 +125,51 @@ describe("compile command", () => {
 		const result = run(["compile", "nonexistent.logic.md"]);
 		expect(result.exitCode).toBe(2);
 		expect(result.stderr).toContain("not found");
+	});
+});
+
+// ---------------------------------------------------------------------------
+// compile --step
+// ---------------------------------------------------------------------------
+describe("compile --step", () => {
+	it("compiles a single step and outputs JSON with systemPromptSegment", () => {
+		const result = run(["compile", VALID_FIXTURE, "--step", "analyze"]);
+		expect(result.exitCode).toBe(0);
+		const parsed = JSON.parse(result.stdout);
+		expect(typeof parsed.systemPromptSegment).toBe("string");
+		expect(parsed.systemPromptSegment).toContain("analyze");
+		expect(parsed.metadata.stepName).toBe("analyze");
+	});
+
+	it("includes selfReflection when step has self-verification enabled", () => {
+		const result = run(["compile", SELF_REFLECTION_FIXTURE, "--step", "analyze"]);
+		expect(result.exitCode).toBe(0);
+		const parsed = JSON.parse(result.stdout);
+		expect(parsed.selfReflection).not.toBeNull();
+		expect(typeof parsed.selfReflection.prompt).toBe("string");
+		expect(parsed.selfReflection.prompt).toContain("Self-Evaluation");
+		expect(parsed.selfReflection.minimumScore).toBe(0.7);
+	});
+
+	it("selfReflection is null when no self-verification configured", () => {
+		const result = run(["compile", VALID_FIXTURE, "--step", "analyze"]);
+		expect(result.exitCode).toBe(0);
+		const parsed = JSON.parse(result.stdout);
+		expect(parsed.selfReflection).toBeNull();
+	});
+
+	it("exits 1 when --step names a nonexistent step", () => {
+		const result = run(["compile", VALID_FIXTURE, "--step", "nonexistent"]);
+		expect(result.exitCode).toBe(1);
+		expect(result.stderr).toContain("not found");
+	});
+
+	it("compile without --step still outputs full pipeline JSON", () => {
+		const result = run(["compile", VALID_FIXTURE]);
+		expect(result.exitCode).toBe(0);
+		const parsed = JSON.parse(result.stdout);
+		expect(parsed.name).toBe("test-strategy");
+		expect(parsed._dagLevels).toBeDefined();
 	});
 });
 
