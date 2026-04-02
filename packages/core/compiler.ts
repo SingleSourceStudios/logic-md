@@ -17,6 +17,7 @@ import type {
 	Reasoning,
 	RetryConfig,
 	RetryPolicy,
+	SelfVerification,
 	Step,
 	WorkflowContext,
 } from "./types.js";
@@ -212,6 +213,48 @@ function compileRetryPolicy(retry: RetryConfig): RetryPolicy {
 }
 
 /**
+ * Compile self-verification config into a self-reflection prompt and minimum score.
+ * Returns null if disabled or unsupported strategy.
+ */
+function compileSelfReflection(
+	selfVerification: SelfVerification,
+): { prompt: string; minimumScore: number } | null {
+	if (selfVerification.enabled === false) {
+		return null;
+	}
+
+	if (selfVerification.strategy === "rubric" && selfVerification.rubric) {
+		const criteria = selfVerification.rubric.criteria ?? [];
+		const minimumScore = selfVerification.rubric.minimum_score ?? 0.5;
+
+		const criteriaLines = criteria.map(
+			(c) => `- **${c.name}** (weight: ${c.weight}): ${c.description ?? "No description"}`,
+		);
+
+		const prompt = [
+			"## Self-Evaluation",
+			"",
+			"Review your output against the following criteria and score each from 0.0 to 1.0:",
+			"",
+			...criteriaLines,
+			"",
+			`Calculate your weighted total score. Minimum passing score: ${minimumScore}.`,
+		].join("\n");
+
+		return { prompt, minimumScore };
+	}
+
+	if (selfVerification.strategy === "reflection" && selfVerification.reflection) {
+		const prompt =
+			selfVerification.reflection.prompt ??
+			"Review your output for accuracy and completeness.";
+		return { prompt, minimumScore: 0 };
+	}
+
+	return null;
+}
+
+/**
  * Compile a gate check expression into a QualityGateValidator function.
  * Uses the expression engine's evaluate() to evaluate the check expression
  * with the step output injected as `{ output }` in the expression context.
@@ -313,7 +356,9 @@ export function compileStep(
 			}
 			return gates;
 		})(),
-		selfReflection: null,
+		selfReflection: spec.quality_gates?.self_verification
+			? compileSelfReflection(spec.quality_gates.self_verification)
+			: null,
 		retryPolicy: step.retry ? compileRetryPolicy(step.retry) : null,
 		metadata: {
 			stepName,
