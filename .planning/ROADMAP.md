@@ -215,7 +215,10 @@ Plans:
   2. Each step in the compiled workflow is pre-compiled via compileStep (not deferred)
   3. Steps at the same DAG level are grouped as parallel-executable
   4. Global quality gates and fallback policies from the spec are attached to the compiled workflow
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 15-01-PLAN.md -- TDD compileWorkflow: DAG-ordered pre-compiled steps with global quality gates and fallback policies
 
 ### Phase 16: CLI Compile Step
 **Goal**: Developers can compile individual steps from the command line and see self-reflection prompts when applicable
@@ -258,6 +261,6 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 12. Step Compiler Context | 2/2 | Complete    | 2026-04-02 | - |
 | 13. Quality Gate Compilation | 2/2 | Complete    | 2026-04-02 | - |
 | 14. Token Estimation | v1.1 | Complete    | 2026-04-02 | - |
-| 15. Workflow Compiler | v1.1 | 0/0 | Not started | - |
+| 15. Workflow Compiler | v1.1 | 0/1 | Not started | - |
 | 16. CLI Compile Step | v1.1 | 0/0 | Not started | - |
 | 17. Compiler Test Coverage | v1.1 | 0/0 | Not started | - |
