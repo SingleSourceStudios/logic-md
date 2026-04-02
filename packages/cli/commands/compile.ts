@@ -8,14 +8,23 @@
 
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { resolve as dagResolve, parse, resolveImports, validate } from "@logic-md/core";
+import {
+	CompilerError,
+	compileStep,
+	resolve as dagResolve,
+	parse,
+	resolveImports,
+	validate,
+} from "@logic-md/core";
+import type { ExecutionContext } from "@logic-md/core";
 import { formatError, formatInfo } from "../format.js";
 
 interface CommandOptions {
 	json?: boolean;
+	step?: string;
 }
 
-export function runCompile(filePath: string | undefined, _options: CommandOptions): number {
+export function runCompile(filePath: string | undefined, options: CommandOptions): number {
 	if (!filePath) {
 		console.error(formatError("No file specified. Usage: logic-md compile <file>"));
 		return 1;
@@ -69,7 +78,43 @@ export function runCompile(filePath: string | undefined, _options: CommandOption
 
 	const spec = importResult.data;
 
-	// Step 4: DAG resolve (if steps exist)
+	// Step 4a: Single-step compilation (--step flag)
+	if (options.step) {
+		const ctx: ExecutionContext = {
+			currentStep: options.step,
+			previousOutputs: {},
+			input: null,
+			attemptNumber: 1,
+			branchReason: null,
+			previousFailureReason: null,
+		};
+
+		let compiled;
+		try {
+			compiled = compileStep(spec, options.step, ctx);
+		} catch (err: unknown) {
+			if (err instanceof CompilerError) {
+				console.error(formatError(err.message));
+				return 1;
+			}
+			throw err;
+		}
+
+		const outputObj = {
+			systemPromptSegment: compiled.systemPromptSegment,
+			outputSchema: compiled.outputSchema,
+			qualityGateCount: compiled.qualityGates.length,
+			selfReflection: compiled.selfReflection,
+			retryPolicy: compiled.retryPolicy,
+			metadata: compiled.metadata,
+			tokenWarning: compiled.tokenWarning,
+		};
+
+		console.log(JSON.stringify(outputObj, null, 2));
+		return 0;
+	}
+
+	// Step 4b: DAG resolve (if steps exist)
 	if (spec.steps && Object.keys(spec.steps).length > 0) {
 		const dagResult = dagResolve(spec.steps);
 		if (!dagResult.ok) {

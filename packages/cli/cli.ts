@@ -21,6 +21,7 @@ Commands:
   validate <file>   Validate a LOGIC.md file against the spec
   lint <file>       Check best practices and report warnings
   compile <file>    Parse, validate, resolve imports, and output JSON
+    --step <name>   Compile only a specific step (shows self-reflection if enabled)
 
 Options:
   -h, --help        Show this help message
@@ -34,6 +35,7 @@ const { values, positionals } = parseArgs({
 		help: { type: "boolean", short: "h", default: false },
 		version: { type: "boolean", short: "v", default: false },
 		json: { type: "boolean", default: false },
+		step: { type: "string" },
 	},
 	allowPositionals: true,
 	strict: false,
@@ -46,7 +48,7 @@ if (values.version) {
 
 const command = positionals[0];
 const filePath = positionals[1];
-const options = { json: values.json === true };
+const options = { json: values.json === true, step: values.step as string | undefined };
 
 if (values.help && !command) {
 	printUsage();
