@@ -5,6 +5,7 @@
 // =============================================================================
 
 import { resolve } from "./dag.js";
+import { evaluate } from "./expression.js";
 import type {
 	CompiledStep,
 	CompiledWorkflow,
@@ -12,6 +13,7 @@ import type {
 	ExecutionContext,
 	JsonSchemaObject,
 	LogicSpec,
+	QualityGateValidator,
 	Reasoning,
 	RetryConfig,
 	RetryPolicy,
@@ -209,6 +211,21 @@ function compileRetryPolicy(retry: RetryConfig): RetryPolicy {
 	};
 }
 
+/**
+ * Compile a gate check expression into a QualityGateValidator function.
+ * Uses the expression engine's evaluate() to evaluate the check expression
+ * with the step output injected as `{ output }` in the expression context.
+ */
+function compileGateValidator(checkExpression: string, message?: string): QualityGateValidator {
+	return (output: unknown) => {
+		const result = evaluate(checkExpression, { output });
+		if (result) {
+			return { passed: true };
+		}
+		return { passed: false, ...(message ? { message } : {}) };
+	};
+}
+
 // =============================================================================
 // Public API
 // =============================================================================
@@ -284,7 +301,18 @@ export function compileStep(
 	return {
 		systemPromptSegment,
 		outputSchema: (step.output_schema as object) ?? null,
-		qualityGates: [],
+		qualityGates: (() => {
+			const gates: QualityGateValidator[] = [];
+			if (step.verification) {
+				gates.push(compileGateValidator(step.verification.check, step.verification.on_fail_message));
+			}
+			if (spec.quality_gates?.pre_output) {
+				for (const gate of spec.quality_gates.pre_output) {
+					gates.push(compileGateValidator(gate.check, gate.message));
+				}
+			}
+			return gates;
+		})(),
 		selfReflection: null,
 		retryPolicy: step.retry ? compileRetryPolicy(step.retry) : null,
 		metadata: {
