@@ -133,7 +133,7 @@ Plans:
 - [x] **Phase 14: Token Estimation** - Approximate token counting and prompt size warnings (completed 2026-04-02)
 - [x] **Phase 15: Workflow Compiler** - Compile full workflow with DAG execution plan and pre-compiled steps (completed 2026-04-02)
 - [x] **Phase 16: CLI Compile Step** - Add --step flag to compile command and self-reflection output (completed 2026-04-02)
-- [ ] **Phase 17: Compiler Test Coverage** - 90%+ coverage across compiler modules with comprehensive scenario tests
+- [x] **Phase 17: Compiler Test Coverage** - 90%+ coverage across compiler modules with comprehensive scenario tests (completed 2026-04-02)
 
 ## Phase Details
 
@@ -269,4 +269,4 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 14. Token Estimation | v1.1 | Complete    | 2026-04-02 | - |
 | 15. Workflow Compiler | 1/1 | Complete    | 2026-04-02 | - |
 | 16. CLI Compile Step | 1/1 | Complete    | 2026-04-02 | - |
-| 17. Compiler Test Coverage | v1.1 | 0/1 | In Progress | - |
+| 17. Compiler Test Coverage | 1/1 | Complete   | 2026-04-02 | - |

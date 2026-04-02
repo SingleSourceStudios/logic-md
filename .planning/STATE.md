@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Developers can define agent reasoning strategies in a portable, declarative file format -- parsed and validated by a standalone library.
-**Current focus:** Phase 16: CLI Compile Step
+**Current focus:** Phase 17: Compiler Test Coverage
 
 ## Current Position
 
-Phase: 16 of 17 (CLI Compile Step) -- COMPLETE
+Phase: 17 of 17 (Compiler Test Coverage) -- COMPLETE
 Plan: 01 of 01 -- COMPLETE
 Status: Phase Complete
-Last activity: 2026-04-02 -- Phase 16 Plan 01 executed
+Last activity: 2026-04-02 -- Phase 17 Plan 01 executed
 
-Progress: [#################...] 88% (16/17 phases complete)
+Progress: [####################] 100% (17/17 phases complete)
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ Progress: [#################...] 88% (16/17 phases complete)
 | Phase 13 P02 | 2min | 2 tasks | 2 files |
 | Phase 15 P01 | 2min | 2 tasks | 2 files |
 | Phase 16 P01 | 2min | 2 tasks | 4 files |
+| Phase 17 P01 | 1min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 15]: DAG errors propagated as CompilerError with joined error messages
 - [Phase 16]: qualityGates functions replaced with qualityGateCount integer in CLI JSON output
 - [Phase 16]: ExecutionContext built with defaults (attemptNumber 1, null branch/failure) for CLI single-step compile
+- [Phase 17]: No changes to compiler.ts -- test-only additions to close coverage gaps
+- [Phase 17]: Unsupported strategies (checklist, critic) confirmed to return null as designed
 
 ### Pending Todos
 
@@ -93,5 +96,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 16-01-PLAN.md (Phase 16 complete)
+Stopped at: Completed 17-01-PLAN.md (Phase 17 complete -- all phases done)
 Resume file: None

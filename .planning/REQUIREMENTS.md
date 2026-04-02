@@ -49,9 +49,9 @@
 
 ### Testing
 
-- [ ] **CTST-01**: 90%+ test coverage on compiler module
-- [ ] **CTST-02**: Tests cover linear workflows, branching workflows, retry context, quality gate compilation
-- [ ] **CTST-03**: Tests cover self-reflection, parallel step groups, token estimation, edge cases (no steps, single step, missing optional fields)
+- [x] **CTST-01**: 90%+ test coverage on compiler module
+- [x] **CTST-02**: Tests cover linear workflows, branching workflows, retry context, quality gate compilation
+- [x] **CTST-03**: Tests cover self-reflection, parallel step groups, token estimation, edge cases (no steps, single step, missing optional fields)
 
 ### Constraints
 
@@ -101,9 +101,9 @@ All v1.0 requirements shipped and validated. See MILESTONES.md for details.
 | TYPE-02 | Phase 10 | Complete |
 | CLIU-01 | Phase 16 | Complete |
 | CLIU-02 | Phase 16 | Complete |
-| CTST-01 | Phase 17 | Pending |
-| CTST-02 | Phase 17 | Pending |
-| CTST-03 | Phase 17 | Pending |
+| CTST-01 | Phase 17 | Complete |
+| CTST-02 | Phase 17 | Complete |
+| CTST-03 | Phase 17 | Complete |
 | CNST-01 | Phase 10 | Complete |
 | CNST-02 | Phase 10 | Complete |
 | CNST-03 | Phase 10 | Complete |
