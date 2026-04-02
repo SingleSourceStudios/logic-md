@@ -679,3 +679,160 @@ describe("systemPromptSegment: retry context", () => {
 		expect(result.systemPromptSegment).not.toContain("Previous failure");
 	});
 });
+
+// =============================================================================
+// Confidence Requirements in systemPromptSegment
+// =============================================================================
+
+describe("systemPromptSegment: confidence requirements", () => {
+	it("includes confidence section when step has confidence config", () => {
+		const spec = makeSpec({
+			analyzed: {
+				description: "Analyze data",
+				confidence: { minimum: 0.7, target: 0.9 },
+			},
+		});
+		const result = compileStep(spec, "analyzed", makeCtx());
+		expect(result.systemPromptSegment).toContain("## Confidence Requirements");
+	});
+
+	it("shows minimum confidence threshold", () => {
+		const spec = makeSpec({
+			analyzed: {
+				description: "Analyze data",
+				confidence: { minimum: 0.7, target: 0.9 },
+			},
+		});
+		const result = compileStep(spec, "analyzed", makeCtx());
+		expect(result.systemPromptSegment).toContain("0.7");
+		expect(result.systemPromptSegment).toMatch(/minimum/i);
+	});
+
+	it("shows target confidence when set", () => {
+		const spec = makeSpec({
+			analyzed: {
+				description: "Analyze data",
+				confidence: { minimum: 0.7, target: 0.9 },
+			},
+		});
+		const result = compileStep(spec, "analyzed", makeCtx());
+		expect(result.systemPromptSegment).toContain("0.9");
+		expect(result.systemPromptSegment).toMatch(/target/i);
+	});
+
+	it("shows escalate_below when set", () => {
+		const spec = makeSpec({
+			risky: {
+				description: "Risky step",
+				confidence: { minimum: 0.5, escalate_below: 0.3 },
+			},
+		});
+		const result = compileStep(spec, "risky", makeCtx());
+		expect(result.systemPromptSegment).toContain("0.3");
+		expect(result.systemPromptSegment).toMatch(/escalat/i);
+	});
+
+	it("omits confidence section when step has no confidence config", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.systemPromptSegment).not.toContain("## Confidence Requirements");
+	});
+});
+
+// =============================================================================
+// Quality Gate Checklist in systemPromptSegment
+// =============================================================================
+
+describe("systemPromptSegment: quality gate checklist", () => {
+	it("includes quality gate checklist from step.verification", () => {
+		const spec = makeSpec({
+			verified: {
+				description: "Verified step",
+				verification: {
+					check: "{{ output.sources.length >= 3 }}",
+					on_fail: "retry",
+					on_fail_message: "Need at least 3 sources",
+				},
+			},
+		});
+		const result = compileStep(spec, "verified", makeCtx());
+		expect(result.systemPromptSegment).toContain("## Pre-Response Checklist");
+		expect(result.systemPromptSegment).toContain("Need at least 3 sources");
+	});
+
+	it("includes pre_output gates from spec.quality_gates", () => {
+		const spec: LogicSpec = {
+			spec_version: "1.0",
+			name: "gated-spec",
+			steps: {
+				checked: { description: "Checked step" },
+			},
+			quality_gates: {
+				pre_output: [
+					{
+						name: "length_check",
+						check: "{{ output.length > 100 }}",
+						message: "Response must be over 100 chars",
+					},
+				],
+			},
+		};
+		const result = compileStep(spec, "checked", makeCtx());
+		expect(result.systemPromptSegment).toContain("Response must be over 100 chars");
+	});
+
+	it("combines step verification and global quality gates", () => {
+		const spec: LogicSpec = {
+			spec_version: "1.0",
+			name: "combined-spec",
+			steps: {
+				combined: {
+					description: "Combined step",
+					verification: {
+						check: "{{ output.valid }}",
+						on_fail: "retry",
+						on_fail_message: "Output must be valid",
+					},
+				},
+			},
+			quality_gates: {
+				pre_output: [
+					{
+						name: "format_gate",
+						check: "{{ output.formatted }}",
+						message: "Output must be formatted",
+					},
+				],
+			},
+		};
+		const result = compileStep(spec, "combined", makeCtx());
+		expect(result.systemPromptSegment).toContain("Output must be valid");
+		expect(result.systemPromptSegment).toContain("Output must be formatted");
+	});
+
+	it("omits checklist when no verification and no quality_gates", () => {
+		const spec = makeSpec({ bare: {} });
+		const result = compileStep(spec, "bare", makeCtx());
+		expect(result.systemPromptSegment).not.toContain("## Pre-Response Checklist");
+	});
+
+	it("uses gate name as fallback when message is missing", () => {
+		const spec: LogicSpec = {
+			spec_version: "1.0",
+			name: "namefallback-spec",
+			steps: {
+				fallback_step: { description: "Step with nameless gate" },
+			},
+			quality_gates: {
+				pre_output: [
+					{
+						name: "format_check",
+						check: "{{ valid }}",
+					},
+				],
+			},
+		};
+		const result = compileStep(spec, "fallback_step", makeCtx());
+		expect(result.systemPromptSegment).toContain("format_check");
+	});
+});
