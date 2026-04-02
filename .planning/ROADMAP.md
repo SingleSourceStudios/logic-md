@@ -227,7 +227,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Running `logic-md compile example.logic.md --step analyze` compiles and outputs only the specified step
   2. When a step has self-reflection enabled, the CLI output includes the self-reflection prompt alongside the compiled step
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 16-01-PLAN.md -- TDD --step flag: CLI arg parsing, single-step compilation with self-reflection output
 
 ### Phase 17: Compiler Test Coverage
 **Goal**: The compiler module has 90%+ test coverage with tests covering every workflow shape and edge case
@@ -262,5 +265,5 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 13. Quality Gate Compilation | 2/2 | Complete    | 2026-04-02 | - |
 | 14. Token Estimation | v1.1 | Complete    | 2026-04-02 | - |
 | 15. Workflow Compiler | 1/1 | Complete    | 2026-04-02 | - |
-| 16. CLI Compile Step | v1.1 | 0/0 | Not started | - |
+| 16. CLI Compile Step | v1.1 | 0/1 | In Progress | - |
 | 17. Compiler Test Coverage | v1.1 | 0/0 | Not started | - |
