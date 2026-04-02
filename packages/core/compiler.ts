@@ -9,8 +9,11 @@ import type {
 	CompiledStep,
 	CompiledWorkflow,
 	ExecutionContext,
+	JsonSchemaObject,
 	LogicSpec,
 	Reasoning,
+	RetryConfig,
+	RetryPolicy,
 	Step,
 	WorkflowContext,
 } from "./types.js";
@@ -67,6 +70,40 @@ function formatStepInstructions(stepName: string, step: Step): string {
 	return lines.join("\n");
 }
 
+/**
+ * Format the output schema section for inclusion in the system prompt.
+ * Model-agnostic: works for both JSON mode and function-calling mode.
+ */
+function formatOutputSchema(schema: JsonSchemaObject): string {
+	const schemaJson = JSON.stringify(schema, null, 2);
+	return [
+		"## Required Output Format",
+		"Your response must be valid JSON matching the following schema:",
+		"",
+		"```json",
+		schemaJson,
+		"```",
+		"",
+		"Ensure your output can be parsed as JSON. Include all required fields.",
+		"If using structured output mode, this schema defines the response shape.",
+	].join("\n");
+}
+
+/**
+ * Compile a RetryConfig into a normalized RetryPolicy.
+ * Applies sensible defaults for any missing fields.
+ */
+function compileRetryPolicy(retry: RetryConfig): RetryPolicy {
+	const initialInterval = retry.initial_interval ?? "1s";
+	return {
+		maxAttempts: retry.max_attempts ?? 3,
+		initialInterval,
+		backoffCoefficient: retry.backoff_coefficient ?? 1.0,
+		maximumInterval: retry.maximum_interval ?? (retry.initial_interval ? initialInterval : "60s"),
+		nonRetryableErrors: retry.non_retryable_errors ?? [],
+	};
+}
+
 // =============================================================================
 // Public API
 // =============================================================================
@@ -114,6 +151,10 @@ export function compileStep(
 
 	segments.push(formatStepInstructions(stepName, step));
 
+	if (step.output_schema) {
+		segments.push(formatOutputSchema(step.output_schema));
+	}
+
 	const systemPromptSegment = segments.join("\n\n");
 
 	return {
@@ -121,7 +162,7 @@ export function compileStep(
 		outputSchema: (step.output_schema as object) ?? null,
 		qualityGates: [],
 		selfReflection: null,
-		retryPolicy: null,
+		retryPolicy: step.retry ? compileRetryPolicy(step.retry) : null,
 		metadata: {
 			stepName,
 			dagLevel,
