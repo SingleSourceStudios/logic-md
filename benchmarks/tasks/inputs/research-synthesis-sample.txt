@@ -1,0 +1,26 @@
+Research Question: What is the current state of AI adoption in enterprise software development?
+
+Context:
+We need to understand how enterprises are currently adopting AI tools for software development, including adoption rates, use cases, benefits realized, and remaining barriers.
+
+Related Questions:
+- What percentage of enterprises have adopted AI dev tools?
+- Which use cases provide the most value?
+- What are the main barriers to adoption?
+- How are organizations measuring ROI?
+- What security and quality concerns exist?
+
+Time frame: Focus on 2023-2024 developments
+
+Sources to consider:
+- Industry surveys (Stack Overflow, Statista, McKinsey)
+- Case studies from major tech companies
+- Academic research on AI-assisted development
+- Enterprise adoption reports
+- Security and compliance research
+
+Expected deliverables:
+- Summary of adoption rates by company size
+- Top use cases and their impact
+- Key barriers and risks
+- Recommendations for enterprises considering adoption

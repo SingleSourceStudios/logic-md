@@ -13,6 +13,12 @@ export {
 	resolve,
 } from "./dag.js";
 export {
+	dryRun,
+	type DryRunOptions,
+	type DryRunResult,
+	type StepTrace,
+} from "./executor.js";
+export {
 	type ExpressionContext,
 	ExpressionError,
 	evaluate,

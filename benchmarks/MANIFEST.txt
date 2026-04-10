@@ -1,0 +1,345 @@
+LOGIC.md BENCHMARK FRAMEWORK - COMPLETE MANIFEST
+================================================
+
+Created: 2026-04-10
+Version: 1.0.0
+Status: Ready for use (dry-run and real runs)
+
+DIRECTORY STRUCTURE
+===================
+
+benchmarks/
+├── INDEX.md                                 [Overview and quick navigation]
+├── README.md                                [Full methodology documentation]
+├── QUICKSTART.md                            [5-minute getting started guide]
+├── FRAMEWORK_OVERVIEW.md                    [Detailed architecture reference]
+├── MANIFEST.txt                             [This file]
+│
+├── package.json                             [NPM dependencies and scripts]
+├── .gitignore                               [Git ignore rules]
+│
+├── run.mjs                                  [Main benchmark orchestrator]
+│   └── ~400 lines
+│   └── Functions: main(), loadTask(), buildPrompts(), runBenchmark(), etc.
+│   └── Features: CLI args, progress tracking, result aggregation
+│
+├── scoring.mjs                              [Scoring functions]
+│   └── ~300 lines
+│   └── Functions: 5 scoring functions + aggregation
+│       - scoreStructuredCompliance()        [JSON schema validation]
+│       - scoreDescribingVsDoing()           [Pattern detection]
+│       - scorePipelineCompletion()          [Step completion]
+│       - scoreQualityGateCompliance()       [Gate validation]
+│       - aggregateMetrics()                 [Weighted combination]
+│
+├── llm-adapter.mjs                          [LLM interface and adapters]
+│   └── ~350 lines
+│   └── Classes: 4 total
+│       - LLMAdapter                         [Abstract base class]
+│       - ClaudeAdapter                      [Claude Sonnet implementation]
+│       - OpenAIAdapter                      [GPT-4o implementation]
+│       - MockLLMAdapter                     [Dry-run mock responses]
+│   └── Factory: createAdapter(model, mocks)
+│
+├── tasks/
+│   ├── code-review.json                     [Task definition]
+│   ├── research-synthesis.json              [Task definition]
+│   ├── security-audit.json                  [Task definition]
+│   │   └── Each contains: name, description, input_file, expected_output_schema,
+│   │       control_prompt, treatment_spec, timeout_ms
+│   │
+│   ├── specs/
+│   │   ├── code-review.logic.md             [LOGIC.md spec - 4 steps, COT]
+│   │   ├── research-synthesis.logic.md      [LOGIC.md spec - 4 steps, ReAct]
+│   │   └── security-audit.logic.md          [LOGIC.md spec - 5 steps, Plan-Execute]
+│   │       └── Each contains: reasoning strategy, step definitions, contracts,
+│   │           quality_gates
+│   │
+│   └── inputs/
+│       ├── code-review-sample.js            [~50 lines, vulnerable code example]
+│       ├── research-synthesis-sample.txt    [~20 lines, research prompt]
+│       └── security-audit-sample.js         [~60 lines, security-vulnerable code]
+│
+├── results/
+│   ├── results.json                         [Generated after running]
+│   └── results.md                           [Generated after running]
+│
+└── .gitignore                               [Excludes results, node_modules, logs]
+
+METRICS AND SCORING
+===================
+
+Four dimensions, each 0-100:
+
+1. STRUCTURED COMPLIANCE (40% weight)
+   - Validates output against expected JSON schema
+   - Uses AJV for validation
+   - 100 = perfect match, 0 = invalid JSON
+   - Partial credit for required fields
+
+2. DESCRIBING VS DOING (30% weight, inverted for aggregation)
+   - Detects "I would" patterns indicating description instead of execution
+   - Patterns: "I would...", "As a..., I would...", "I would then...", etc.
+   - 0 = no describing patterns (GOOD), 100 = all describing (BAD)
+   - This is the CORE failure mode LOGIC.md solves
+
+3. PIPELINE COMPLETION (20% weight)
+   - Measures if all multi-step reasoning steps produced non-empty outputs
+   - 100 = all steps completed, 0 = no outputs
+   - Proxy for robustness and termination
+
+4. QUALITY GATE COMPLIANCE (10% weight)
+   - Validates post-output quality gates
+   - Treatment condition only (no gates in control)
+   - Measures % of gates that pass
+
+AGGREGATE SCORE = 0.40*SC + 0.30*(100-DVDoing) + 0.20*PC + 0.10*QGC
+
+TASKS PROVIDED
+==============
+
+1. CODE REVIEW
+   - Complexity: HIGH
+   - Steps: 4 (understand → analyze → assess_style → summarize)
+   - Reasoning: COT (Chain of Thought)
+   - Output: verdict (approve/request-changes/comment) + issues by severity + summary
+   - Quality Gates: 3 (verdict, issues, summary)
+   - Expected Compliance: 70-80% (control), 85-95% (treatment)
+
+2. RESEARCH SYNTHESIS
+   - Complexity: HIGH
+   - Steps: 4 (define_scope → investigate → cross_reference → report)
+   - Reasoning: ReAct (Reason + Act)
+   - Output: research_question + key_findings + sources + confidence + conclusion
+   - Quality Gates: 5 (question, source count, finding count, citations, conclusion)
+   - Expected Compliance: 60-70% (control), 80-90% (treatment)
+
+3. SECURITY AUDIT
+   - Complexity: VERY HIGH
+   - Steps: 5 (scan_surface → check_owasp → classify_cwe → remediate)
+   - Reasoning: Plan-Execute
+   - Output: vulnerabilities + severity_summary + remediation_plan + risk_score
+   - Quality Gates: 5 (vulnerabilities, CWE mapping, summary, plan, score)
+   - Expected Compliance: 50-60% (control), 75-85% (treatment)
+
+SAMPLING DESIGN
+===============
+
+Per task × model × condition:
+- Runs: 10 (modest; 30+ recommended for tighter intervals)
+
+Scale:
+- 3 tasks × 2 conditions (control/treatment) × 10 runs = 60 runs per model
+- With 1 model (Claude): 60 runs total
+- With 2 models (Claude + GPT-4o): 120 runs total
+
+Runtime:
+- Dry run: ~60 seconds (mock responses)
+- Real run (Claude, 1 task): ~5-10 minutes
+- Real run (all 3 tasks): ~30-45 minutes
+
+COMMAND LINE INTERFACE
+======================
+
+npm run benchmark:dry-run
+  └─ Dry run with mock responses (no API keys)
+  └─ Runtime: ~60 seconds
+  └─ Output: results/results.json + results.md
+
+npm run benchmark
+  └─ Real run (requires ANTHROPIC_API_KEY + OPENAI_API_KEY)
+  └─ Runtime: ~30-45 minutes
+  └─ Output: results/results.json + results.md
+
+npm run benchmark:verbose
+  └─ Real run with verbose output per run
+  └─ Shows score, time, and errors for each iteration
+
+node run.mjs --task=code-review --dry-run
+  └─ Single task (useful for testing)
+  └─ Runtime: ~15-20 seconds
+
+DESIGN PRINCIPLES
+=================
+
+1. HONEST RESULTS
+   - Publish regardless of outcome
+   - No cherry-picking runs
+   - No post-hoc p-hacking
+   - All variance reported
+
+2. REPRODUCIBILITY
+   - All outputs timestamped
+   - Seeds deterministic where possible
+   - Full source code disclosed
+
+3. EXTENSIBILITY
+   - Easy to add tasks (JSON + spec + input)
+   - Easy to add models (new LLMAdapter class)
+   - Easy to add metrics (new scoring function)
+
+4. PRAGMATISM
+   - Works offline with --dry-run
+   - No database required
+   - Single-file executable
+   - ~2000 lines total
+
+EXTENSIBILITY CHECKLIST
+=======================
+
+Add a 4th task:
+  ☐ Create tasks/my-task.json
+  ☐ Create tasks/specs/my-task.logic.md
+  ☐ Create tasks/inputs/my-task-sample.txt
+  ☐ Update run.mjs DEFAULT_TASKS (optional)
+  ☐ Run: node run.mjs --task=my-task --dry-run
+
+Add GPT-4o support:
+  ☐ npm install openai
+  ☐ Update run.mjs MODELS list
+  ☐ Export OPENAI_API_KEY
+  ☐ Run: npm run benchmark
+
+Add a new metric:
+  ☐ Add function to scoring.mjs
+  ☐ Export from scoring.mjs
+  ☐ Call from run.mjs in scoring section
+  ☐ Add to results JSON
+  ☐ Update results.md template
+
+HONESTY COMMITMENT
+==================
+
+This framework is designed to answer: "Does LOGIC.md actually help?"
+NOT: "How can we make LOGIC.md look good?"
+
+We will publish:
+- Positive results (LOGIC.md helps significantly)
+- Negative results (LOGIC.md barely moves needle)
+- Mixed results (LOGIC.md helps on some tasks, not others)
+- Inconclusive results (need more runs)
+- Unexpected results (LOGIC.md hurts performance)
+
+No results will be suppressed, cherry-picked, or post-hoc tuned.
+
+KNOWN LIMITATIONS
+=================
+
+1. Sample size: 10 runs per condition (modest)
+   → Recommendation: Scale to 30+ runs if results unclear
+
+2. Task selection: 3 multi-step reasoning tasks (not exhaustive)
+   → Multi-step pipelines are the key use case
+   → Single-call classification not tested
+
+3. Model selection: Claude Sonnet only (primary)
+   → GPT-4o extensible but not yet integrated
+   → Model-specific behavior not yet analyzed
+
+4. Fixed temperature: 0.7 (may favor some models)
+   → Future: sensitivity analysis across temperatures
+
+5. Timeout: 30 seconds per run
+   → Some longer tasks may truncate
+   → Increase timeout_ms in task JSON if needed
+
+6. Single seed: Results vary by run
+   → Inherent LLM variance, not a bug
+   → Captured in stddev calculations
+
+FUTURE WORK
+===========
+
+Near term (v1.1):
+- Complete all 5 planned tasks
+- Add GPT-4o integration
+- Scale to 30 runs per condition
+- Publish initial findings
+
+Medium term (v1.2):
+- Per-step timing breakdown
+- Temperature sensitivity analysis
+- Confidence interval calculation
+- VSCode extension for task authoring
+
+Long term (v2.0):
+- Multi-language support (Python SDK)
+- Hosted dashboard for tracking results
+- Community task marketplace
+- Automated regression testing
+
+REFERENCES
+==========
+
+- README.md ..................... Full methodology (honesty principle, caveats)
+- QUICKSTART.md ................. 5-minute getting started guide
+- FRAMEWORK_OVERVIEW.md ......... Detailed architecture and design
+- INDEX.md ...................... Quick navigation guide
+- docs/SPEC.md .................. LOGIC.md specification
+- packages/core/src/ ............ Core parser and compiler
+- packages/cli/src/ ............. CLI implementation
+
+FILES CHECKLIST
+===============
+
+Core Framework (4 files):
+  ✓ run.mjs                  (~400 lines)
+  ✓ scoring.mjs              (~300 lines)
+  ✓ llm-adapter.mjs          (~350 lines)
+  ✓ package.json             (dependencies)
+
+Task Definitions (8 files):
+  ✓ tasks/code-review.json             (task definition)
+  ✓ tasks/research-synthesis.json      (task definition)
+  ✓ tasks/security-audit.json          (task definition)
+  ✓ tasks/specs/code-review.logic.md        (LOGIC.md spec)
+  ✓ tasks/specs/research-synthesis.logic.md (LOGIC.md spec)
+  ✓ tasks/specs/security-audit.logic.md     (LOGIC.md spec)
+  ✓ tasks/inputs/code-review-sample.js           (sample input)
+  ✓ tasks/inputs/research-synthesis-sample.txt   (sample input)
+  ✓ tasks/inputs/security-audit-sample.js        (sample input)
+
+Documentation (4 files):
+  ✓ README.md                 (full methodology)
+  ✓ QUICKSTART.md             (getting started)
+  ✓ FRAMEWORK_OVERVIEW.md     (architecture reference)
+  ✓ INDEX.md                  (quick navigation)
+
+Configuration (2 files):
+  ✓ .gitignore                (git rules)
+  ✓ MANIFEST.txt              (this file)
+
+TOTAL: 18 files, ~2000 lines of code + documentation
+
+QUICK REFERENCE
+===============
+
+Start here:
+  1. Read INDEX.md (2 min)
+  2. Run: npm install && npm run benchmark:dry-run (2 min)
+  3. Read results/results.md (3 min)
+  4. Read QUICKSTART.md for real runs (3 min)
+
+For methodology details:
+  └─ README.md (full, ~400 lines)
+
+For architecture details:
+  └─ FRAMEWORK_OVERVIEW.md (~500 lines)
+
+For implementation:
+  └─ Read source code (run.mjs, scoring.mjs, llm-adapter.mjs)
+
+CONTACT & ATTRIBUTION
+=====================
+
+Framework created for LOGIC.md project
+Part of declarative reasoning specification v1.0
+Developed by: LOGIC.md Contributors
+License: MIT
+Date: 2026-04-10
+
+For questions about methodology: see README.md
+For questions about architecture: see FRAMEWORK_OVERVIEW.md
+For quick start: see QUICKSTART.md
+
+===== END OF MANIFEST =====
