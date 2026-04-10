@@ -23,6 +23,11 @@ export class LLMAdapter {
 export class ClaudeAdapter extends LLMAdapter {
   constructor() {
     super();
+    this.client = null;
+  }
+
+  async _ensureClient() {
+    if (this.client) return;
     try {
       const { default: Anthropic } = await import('@anthropic-ai/sdk');
       this.client = new Anthropic({
@@ -34,6 +39,7 @@ export class ClaudeAdapter extends LLMAdapter {
   }
 
   async call(model, systemPrompt, userPrompt, options = {}) {
+    await this._ensureClient();
     const {
       temperature = 0.7,
       max_tokens = 4096,
@@ -83,6 +89,11 @@ export class ClaudeAdapter extends LLMAdapter {
 export class OpenAIAdapter extends LLMAdapter {
   constructor() {
     super();
+    this.client = null;
+  }
+
+  async _ensureClient() {
+    if (this.client) return;
     try {
       const { default: OpenAI } = await import('openai');
       this.client = new OpenAI({
@@ -94,6 +105,7 @@ export class OpenAIAdapter extends LLMAdapter {
   }
 
   async call(model, systemPrompt, userPrompt, options = {}) {
+    await this._ensureClient();
     const {
       temperature = 0.7,
       max_tokens = 4096,
