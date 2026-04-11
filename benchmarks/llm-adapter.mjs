@@ -84,23 +84,32 @@ export class ClaudeAdapter extends LLMAdapter {
 }
 
 /**
- * OpenAI Adapter - Calls OpenAI GPT models
+ * OpenAI-Compatible Adapter - Calls OpenAI, Nvidia NIM, or any OpenAI-compatible API
  */
 export class OpenAIAdapter extends LLMAdapter {
-  constructor() {
+  constructor(baseURL = null, apiKeyEnv = 'OPENAI_API_KEY') {
     super();
     this.client = null;
+    this.baseURL = baseURL;
+    this.apiKeyEnv = apiKeyEnv;
   }
 
   async _ensureClient() {
     if (this.client) return;
     try {
       const { default: OpenAI } = await import('openai');
-      this.client = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY
-      });
+      const apiKey = process.env[this.apiKeyEnv];
+      if (!apiKey) {
+        throw new Error(`Missing API key: set ${this.apiKeyEnv} environment variable`);
+      }
+      const opts = { apiKey };
+      if (this.baseURL) opts.baseURL = this.baseURL;
+      this.client = new OpenAI(opts);
     } catch (error) {
-      throw new Error('OpenAI SDK not installed. Run: npm install openai');
+      if (error.code === 'ERR_MODULE_NOT_FOUND') {
+        throw new Error('OpenAI SDK not installed. Run: npm install openai');
+      }
+      throw error;
     }
   }
 
@@ -334,6 +343,11 @@ export async function createAdapter(model, mockResponses = null) {
 
   if (model.startsWith('gpt')) {
     return new OpenAIAdapter();
+  }
+
+  // Nvidia NIM models (meta/llama, nvidia/, mistralai/, etc.)
+  if (model.includes('/') || process.env.NVIDIA_API_KEY) {
+    return new OpenAIAdapter('https://integrate.api.nvidia.com/v1', 'NVIDIA_API_KEY');
   }
 
   throw new Error(`Unknown model: ${model}`);

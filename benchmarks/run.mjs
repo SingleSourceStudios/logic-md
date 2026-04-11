@@ -15,7 +15,7 @@ import { createAdapter } from './llm-adapter.mjs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Configuration
-const MODELS = ['claude-sonnet-3-5'];
+const MODELS = [process.env.BENCHMARK_MODEL || 'meta/llama-3.1-70b-instruct'];
 const CONDITIONS = ['control', 'treatment'];
 const RUNS_PER_CONDITION = 10;
 const DEFAULT_TASKS = ['code-review', 'research-synthesis', 'security-audit'];
