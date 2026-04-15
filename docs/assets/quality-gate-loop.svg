@@ -42,19 +42,19 @@
 
   <!-- Outcome nodes on right -->
   <g transform="translate(780,80)">
-    <rect class="outcome-pass" width="180" height="70" rx="10"/>
+    <rect class="outcome-pass" width="215" height="70" rx="10"/>
     <text x="20" y="28" class="tag" fill="#2db88a">OUTCOME · A</text>
     <text x="20" y="54" class="pass-label">PASS ·  proceed</text>
   </g>
 
   <g transform="translate(780,210)">
-    <rect class="outcome-retry" width="180" height="70" rx="10"/>
+    <rect class="outcome-retry" width="215" height="70" rx="10"/>
     <text x="20" y="28" class="tag" fill="#e07050">OUTCOME · B</text>
     <text x="20" y="54" class="retry-label">RETRY ·  re-run step</text>
   </g>
 
   <g transform="translate(780,340)">
-    <rect class="outcome-esc" width="180" height="70" rx="10"/>
+    <rect class="outcome-esc" width="215" height="70" rx="10"/>
     <text x="20" y="28" class="tag" fill="#f85149">OUTCOME · C</text>
     <text x="20" y="54" class="esc-label">ESCALATE ·  fallback</text>
   </g>
