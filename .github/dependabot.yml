@@ -11,6 +11,25 @@ updates:
           - "@logic-md/*"
       dev-dependencies:
         dependency-type: "development"
+    ignore:
+      # @types/node must not lead engines.node — ahead-of-runtime types can mask
+      # use of newer-Node-only APIs and cause runtime breaks. Bump engines.node
+      # first (and CI matrix), then let @types/node follow. Tracked in #29.
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
+  - package-ecosystem: "npm"
+    directory: "/editors/vscode"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    ignore:
+      # VS Code extension host runs an older Node baseline (1.80 ships Node 16,
+      # 1.90+ ships Node 20). @types/node here must match engines.vscode, not
+      # whatever latest is. Tracked in #29.
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
