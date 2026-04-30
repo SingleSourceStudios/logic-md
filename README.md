@@ -2,7 +2,7 @@
 
 **The declarative reasoning layer for AI agents.**
 
-A portable, framework-agnostic file format for specifying *how* an agent thinks — strategy, step DAGs, contracts, quality gates, and fallback policies — declared in YAML rather than hardcoded in Python.
+A portable, framework-agnostic file format for specifying *how* an agent thinks, it's strategy, step DAGs, contracts, quality gates, and fallback policies, declared in YAML rather than hardcoded in Python.
 
 [![npm](https://img.shields.io/npm/v/@logic-md/core?color=7c6fe0&label=%40logic-md%2Fcore)](https://www.npmjs.com/package/@logic-md/core)
 [![npm](https://img.shields.io/npm/v/@logic-md/cli?color=2db88a&label=%40logic-md%2Fcli)](https://www.npmjs.com/package/@logic-md/cli)
