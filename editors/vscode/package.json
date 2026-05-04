@@ -11,7 +11,7 @@
 		"url": "https://github.com/SingularityAI-Dev/logic-md"
 	},
 	"engines": {
-		"vscode": "^1.80.0"
+		"vscode": "^1.90.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -60,7 +60,7 @@
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.118.0",
-		"@types/node": "^22.0.0",
+		"@types/node": "^20.0.0",
 		"@vscode/vsce": "^3.2.0",
 		"esbuild": "^0.28.0",
 		"typescript": "^6.0.3"
